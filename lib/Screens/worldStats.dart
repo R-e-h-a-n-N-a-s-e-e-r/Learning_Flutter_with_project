@@ -13,30 +13,6 @@ class Worldstats extends StatefulWidget {
   State<Worldstats> createState() => _WorldstatsState();
 }
 
-class ReusableRow extends StatelessWidget {
-  String title, value;
-
-  ReusableRow({Key? key, required this.title, required this.value})
-    : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.only(left: 10, right: 10, top: 10, bottom: 5),
-      child: Column(
-        children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [Text(title), Text(value)],
-          ),
-          SizedBox(height: 5),
-          Divider(),
-        ],
-      ),
-    );
-  }
-}
-
 class _WorldstatsState extends State<Worldstats> with TickerProviderStateMixin {
   late final AnimationController _controller = AnimationController(
     duration: const Duration(milliseconds: 1000),
@@ -142,8 +118,9 @@ class _WorldstatsState extends State<Worldstats> with TickerProviderStateMixin {
                                 ),
 
                                 ReusableRow(
-                                  title: 'Today Deaths',
-                                  value: snapshot.data!.todayDeaths.toString(),
+                                  title: 'Affected Countries',
+                                  value: snapshot.data!.affectedCountries
+                                      .toString(),
                                 ),
                               ],
                             ),
@@ -175,6 +152,35 @@ class _WorldstatsState extends State<Worldstats> with TickerProviderStateMixin {
             ],
           ),
         ),
+      ),
+    );
+  }
+}
+
+class ReusableRow extends StatelessWidget {
+  final String title, value;
+
+  const ReusableRow({super.key, required this.title, required this.value});
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.only(left: 10, right: 10, top: 10, bottom: 5),
+      child: Column(
+        children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(
+                title,
+                style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+              ),
+              Text(value,),
+            ],
+          ),
+          SizedBox(height: 5),
+          Divider(color: Colors.grey.shade800),
+        ],
       ),
     );
   }

@@ -1,3 +1,4 @@
+import 'package:covidtracker/Screens/countrydetail.dart';
 import 'package:covidtracker/Services/fetchWorldStats.dart';
 import 'package:flutter/material.dart';
 import 'package:shimmer/shimmer.dart';
@@ -25,10 +26,8 @@ class _CountrieslistscreenState extends State<Countrieslistscreen> {
             Padding(
               padding: const EdgeInsets.all(8.0),
               child: TextFormField(
-                onChanged: (value){
-                  setState(() {
-
-                  });
+                onChanged: (value) {
+                  setState(() {});
                 },
                 controller: searchController,
                 decoration: InputDecoration(
@@ -43,7 +42,7 @@ class _CountrieslistscreenState extends State<Countrieslistscreen> {
             Expanded(
               child: FutureBuilder(
                 future: fetchWorldStats.fetchCountryRecords(),
-                builder: (context, snapshot) {
+                builder: (context, AsyncSnapshot<List<dynamic>> snapshot) {
                   if (!snapshot.hasData) {
                     return ListView.builder(
                       itemCount: 10,
@@ -77,53 +76,100 @@ class _CountrieslistscreenState extends State<Countrieslistscreen> {
                       itemCount: snapshot.data!.length,
                       itemBuilder: (context, index) {
                         String name = snapshot.data![index]['country'];
-                        if(searchController.text.isEmpty){
-                          return ListTile(
-                            title: Text(
-                              snapshot.data![index]['country'],
-                              style: TextStyle(
-                                fontWeight: FontWeight.w700,
-                                fontSize: 15,
+                        if (searchController.text.isEmpty) {
+                          return InkWell(
+                            onTap: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => CountryDetail(
+                                    name: snapshot.data![index]['country'],
+                                    image: snapshot
+                                        .data![index]['countryInfo']['flag'],
+                                    totalCases: snapshot.data![index]['cases'],
+                                    totalRecovered:
+                                        snapshot.data![index]['recovered'],
+                                    totalDeaths:
+                                        snapshot.data![index]['deaths'],
+                                    active: snapshot.data![index]['active'],
+                                    oneCasePerPeople: snapshot.data![index]['oneCasePerPeople'],
+                                    todayRecovered:
+                                        snapshot.data![index]['todayRecovered'],
+                                    todayDeaths:
+                                        snapshot.data![index]['todayDeaths'],
+                                    critical: snapshot.data![index]['critical'],
+                                  ),
+                                ),
+                              );
+                            },
+                            child: ListTile(
+                              title: Text(
+                                snapshot.data![index]['country'],
+                                style: TextStyle(
+                                  fontWeight: FontWeight.w700,
+                                  fontSize: 15,
+                                ),
                               ),
-                            ),
-                            subtitle: Text(
-                              snapshot.data![index]['cases'].toString(),
-                            ),
-                            leading: Image(
-                              width: 50,
-                              height: 50,
-                              fit: BoxFit.cover,
-                              image: NetworkImage(
-                                snapshot.data![index]['countryInfo']['flag'],
+                              subtitle: Text(
+                                snapshot.data![index]['cases'].toString(),
+                              ),
+                              leading: Image(
+                                width: 50,
+                                height: 50,
+                                fit: BoxFit.cover,
+                                image: NetworkImage(
+                                  snapshot.data![index]['countryInfo']['flag'],
+                                ),
                               ),
                             ),
                           );
-                        }else if(name.toLowerCase().contains(searchController.text.toLowerCase())){
-                          return ListTile(
-                            title: Text(
-                              snapshot.data![index]['country'],
-                              style: TextStyle(
-                                fontWeight: FontWeight.w700,
-                                fontSize: 15,
+                        } else if (name.toLowerCase().contains(
+                          searchController.text.toLowerCase(),
+                        )) {
+                          return InkWell(
+                            onTap: (){
+                              Navigator.push(context, MaterialPageRoute(builder: (context) => CountryDetail(
+                                name: snapshot.data![index]['country'],
+                                image: snapshot
+                                    .data![index]['countryInfo']['flag'],
+                                totalCases: snapshot.data![index]['cases'],
+                                totalRecovered:
+                                snapshot.data![index]['recovered'],
+                                totalDeaths:
+                                snapshot.data![index]['deaths'],
+                                active: snapshot.data![index]['active'],
+                                oneCasePerPeople: snapshot.data![index]['oneCasePerPeople'],
+                                todayRecovered:
+                                snapshot.data![index]['todayRecovered'],
+                                todayDeaths:
+                                snapshot.data![index]['todayDeaths'],
+                                critical: snapshot.data![index]['critical'],
+                              ),));
+                            },
+                            child: ListTile(
+                              title: Text(
+                                snapshot.data![index]['country'],
+                                style: TextStyle(
+                                  fontWeight: FontWeight.w700,
+                                  fontSize: 15,
+                                ),
                               ),
-                            ),
-                            subtitle: Text(
-                              snapshot.data![index]['cases'].toString(),
-                            ),
-                            leading: Image(
-                              width: 50,
-                              height: 50,
-                              fit: BoxFit.cover,
-                              image: NetworkImage(
-                                snapshot.data![index]['countryInfo']['flag'],
+                              subtitle: Text(
+                                snapshot.data![index]['cases'].toString(),
+                              ),
+                              leading: Image(
+                                width: 50,
+                                height: 50,
+                                fit: BoxFit.cover,
+                                image: NetworkImage(
+                                  snapshot.data![index]['countryInfo']['flag'],
+                                ),
                               ),
                             ),
                           );
-                        }else{
+                        } else {
                           return Container();
                         }
-
-
                       },
                     );
                   }
